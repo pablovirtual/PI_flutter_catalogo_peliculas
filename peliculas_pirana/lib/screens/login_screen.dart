@@ -3,6 +3,16 @@ import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 import 'catalog_screen.dart';
 
+/// Pantalla de Autenticación (LoginScreen)
+///
+/// Maneja tanto el Inicio de Sesión como el Registro de nuevos usuarios.
+/// Utiliza un formulario con validación para email y contraseña.
+///
+/// Características:
+/// - Alterna dinámicamente entre modo "Login" y "Registro".
+/// - Valida formato de email y longitud de contraseña.
+/// - Se comunica con `AuthService` para realizar la autenticación.
+/// - Redirige al Catálogo en caso de éxito o muestra errores en caso de fallo.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 

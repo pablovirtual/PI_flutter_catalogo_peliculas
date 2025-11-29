@@ -1,6 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/movie_model.dart';
 
+/// Servicio de Base de Datos (DatabaseService)
+///
+/// Gestiona la interacción con Cloud Firestore.
+/// Permite realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
+/// sobre la colección 'movies'.
+///
+/// Funcionalidades principales:
+/// - `addMovie`: Guarda una nueva película en Firestore.
+/// - `movies`: Stream que devuelve la lista de películas en tiempo real.
+/// - `updateMovie`: Modifica los datos de una película existente.
+/// - `deleteMovie`: Elimina una película de la base de datos.
 class DatabaseService {
   final CollectionReference movieCollection =
       FirebaseFirestore.instance.collection('movies');

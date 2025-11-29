@@ -2,6 +2,15 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/movie_model.dart';
 
+/// Servicio de API Externa (TMDBService)
+///
+/// Se encarga de la comunicación con la API de The Movie Database (TMDB).
+/// Utiliza el paquete `http` para realizar peticiones GET.
+///
+/// Funcionalidad principal:
+/// - `getPopularMovies`: Obtiene las películas más populares del momento
+///   y las convierte en una lista de objetos `MovieModel` para que sean
+///   compatibles con el resto de la aplicación.
 class TMDBService {
   static const String _baseUrl = 'https://api.themoviedb.org/3';
   static const String _bearerToken =

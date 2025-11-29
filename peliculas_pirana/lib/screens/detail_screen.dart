@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import '../models/movie_model.dart';
 
+/// Pantalla de Detalles (DetailScreen)
+///
+/// Muestra la información completa de una película seleccionada.
+/// Recibe un objeto `MovieModel` como parámetro.
+///
+/// Visualiza:
+/// - Póster de la película en gran tamaño.
+/// - Título, Año, Director y Género.
+/// - Sinopsis completa.
 class DetailScreen extends StatelessWidget {
   final MovieModel movie;
 

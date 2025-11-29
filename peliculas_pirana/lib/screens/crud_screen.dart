@@ -3,6 +3,15 @@ import 'package:provider/provider.dart';
 import '../models/movie_model.dart';
 import '../services/database_service.dart';
 
+/// Pantalla de Gestión (CrudScreen)
+///
+/// Permite al usuario Crear, Actualizar y Eliminar sus propias películas.
+///
+/// Funcionalidades:
+/// - Formulario dinámico que sirve tanto para Agregar como para Editar.
+/// - Vista previa en tiempo real de la imagen por URL.
+/// - Lista inferior con las películas existentes, permitiendo editarlas o borrarlas.
+/// - Interactúa directamente con `DatabaseService` para persistir los cambios en Firebase.
 class CrudScreen extends StatefulWidget {
   const CrudScreen({super.key});
 

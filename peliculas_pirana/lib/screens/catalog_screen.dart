@@ -9,6 +9,17 @@ import 'crud_screen.dart';
 import 'detail_screen.dart';
 import 'welcome_screen.dart';
 
+/// Pantalla de Catálogo (CatalogScreen)
+///
+/// Es la pantalla principal de la aplicación donde se visualizan las películas.
+/// Implementa un enfoque híbrido de datos:
+/// 1. Muestra primero las películas personales del usuario (desde Firebase).
+/// 2. Muestra después las películas populares (desde TMDB API).
+///
+/// Características:
+/// - Menú lateral (Drawer) con información del usuario y navegación.
+/// - Lista combinada de películas con distinción visual.
+/// - Navegación a `DetailScreen` al tocar una película.
 class CatalogScreen extends StatefulWidget {
   const CatalogScreen({super.key});
 

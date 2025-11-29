@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 
+/// Pantalla de Bienvenida (WelcomeScreen)
+///
+/// Es la primera pantalla que ve el usuario al abrir la aplicación (si no está logueado).
+/// Presenta el logo, el nombre de la app y un botón para comenzar.
+/// Su objetivo es dar una introducción visual amigable antes del proceso de autenticación.
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 

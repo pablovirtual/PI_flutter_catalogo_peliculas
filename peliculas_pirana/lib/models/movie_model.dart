@@ -1,3 +1,9 @@
+/// Modelo de datos para representar una película en la aplicación.
+/// 
+/// Esta clase define la estructura de datos que se utiliza tanto para
+/// las películas almacenadas en Firebase como para las obtenidas de TMDB.
+/// Incluye métodos de conversión `toMap` y `fromMap` para facilitar
+/// la serialización y deserialización de datos.
 class MovieModel {
   String? id;
   String title;

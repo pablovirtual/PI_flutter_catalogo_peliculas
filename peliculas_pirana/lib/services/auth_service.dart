@@ -1,5 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+/// Servicio de Autenticación (AuthService)
+///
+/// Gestiona todas las operaciones relacionadas con Firebase Authentication.
+/// Proporciona métodos para:
+/// - Registrar nuevos usuarios con email y contraseña.
+/// - Iniciar sesión (Login).
+/// - Cerrar sesión (Logout).
+/// - Escuchar cambios en el estado de autenticación (Stream<User?>).
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
