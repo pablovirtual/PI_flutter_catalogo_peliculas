@@ -33,6 +33,15 @@ class WelcomeScreen extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
+              const SizedBox(height: 20),
+              const Text(
+                'Bienvenidos a Películas Piraña',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 50),
               ElevatedButton(
                 onPressed: () {

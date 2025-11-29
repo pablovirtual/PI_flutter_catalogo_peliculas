@@ -29,4 +29,9 @@ class DatabaseService {
   Future<void> deleteMovie(String id) async {
     return await movieCollection.doc(id).delete();
   }
+
+  // Actualizar película
+  Future<void> updateMovie(String id, MovieModel movie) async {
+    return await movieCollection.doc(id).update(movie.toMap());
+  }
 }

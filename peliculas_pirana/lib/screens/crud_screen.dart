@@ -18,6 +18,10 @@ class _CrudScreenState extends State<CrudScreen> {
   String genre = '';
   String synopsis = '';
   String imageUrl = '';
+  
+  // Variables para modo edición
+  bool isEditing = false;
+  String? editingMovieId;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +35,9 @@ class _CrudScreenState extends State<CrudScreen> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            const Text(
-              'Agregar Película',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(
+              isEditing ? 'Editar Película' : 'Agregar Película',
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             Form(
@@ -67,27 +71,121 @@ class _CrudScreenState extends State<CrudScreen> {
                     onChanged: (val) => setState(() => synopsis = val),
                   ),
                   TextFormField(
-                    decoration: const InputDecoration(labelText: 'URL de Imagen'),
+                    decoration: const InputDecoration(
+                      labelText: 'URL de Imagen',
+                      hintText: 'https://ejemplo.com/imagen.jpg',
+                    ),
                     onChanged: (val) => setState(() => imageUrl = val),
                   ),
+                  const SizedBox(height: 10),
+                  if (imageUrl.isNotEmpty)
+                    Column(
+                      children: [
+                        const Text('Vista previa:', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 5),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(
+                            imageUrl,
+                            height: 200,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) => Container(
+                              height: 200,
+                              color: Colors.red[100],
+                              child: const Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.error, color: Colors.red, size: 50),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      'URL inválida o imagen no disponible',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        await dbService.addMovie(MovieModel(
-                          title: title,
-                          year: year,
-                          director: director,
-                          genre: genre,
-                          synopsis: synopsis,
-                          imageUrl: imageUrl,
-                        ));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Película Agregada')));
-                        _formKey.currentState!.reset();
-                      }
-                    },
-                    child: const Text('Agregar Película'),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              if (isEditing && editingMovieId != null) {
+                                // Modo edición: actualizar película
+                                await dbService.updateMovie(
+                                  editingMovieId!,
+                                  MovieModel(
+                                    id: editingMovieId,
+                                    title: title,
+                                    year: year,
+                                    director: director,
+                                    genre: genre,
+                                    synopsis: synopsis,
+                                    imageUrl: imageUrl,
+                                  ),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Película Actualizada')));
+                              } else {
+                                // Modo agregar: crear nueva película
+                                await dbService.addMovie(MovieModel(
+                                  title: title,
+                                  year: year,
+                                  director: director,
+                                  genre: genre,
+                                  synopsis: synopsis,
+                                  imageUrl: imageUrl,
+                                ));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Película Agregada')));
+                              }
+                              
+                              // Limpiar formulario
+                              _formKey.currentState!.reset();
+                              setState(() {
+                                title = '';
+                                year = '';
+                                director = '';
+                                genre = '';
+                                synopsis = '';
+                                imageUrl = '';
+                                isEditing = false;
+                                editingMovieId = null;
+                              });
+                            }
+                          },
+                          child: Text(isEditing ? 'Actualizar Película' : 'Agregar Película'),
+                        ),
+                      ),
+                      if (isEditing) ...[
+                        const SizedBox(width: 10),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+                          onPressed: () {
+                            setState(() {
+                              _formKey.currentState!.reset();
+                              title = '';
+                              year = '';
+                              director = '';
+                              genre = '';
+                              synopsis = '';
+                              imageUrl = '';
+                              isEditing = false;
+                              editingMovieId = null;
+                            });
+                          },
+                          child: const Text('Cancelar'),
+                        ),
+                      ],
+                    ],
                   ),
                 ],
               ),
@@ -110,11 +208,38 @@ class _CrudScreenState extends State<CrudScreen> {
                       final movie = snapshot.data![index];
                       return ListTile(
                         title: Text(movie.title),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () async {
-                            await dbService.deleteMovie(movie.id!);
-                          },
+                        subtitle: Text('${movie.year} • ${movie.genre}'),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit, color: Colors.blue),
+                              onPressed: () {
+                                // Llenar el formulario con los datos de la película
+                                setState(() {
+                                  isEditing = true;
+                                  editingMovieId = movie.id;
+                                  title = movie.title;
+                                  year = movie.year;
+                                  director = movie.director;
+                                  genre = movie.genre;
+                                  synopsis = movie.synopsis;
+                                  imageUrl = movie.imageUrl;
+                                });
+                                // Scroll automático hacia arriba
+                                Scrollable.ensureVisible(
+                                  _formKey.currentContext!,
+                                  duration: const Duration(milliseconds: 500),
+                                );
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () async {
+                                await dbService.deleteMovie(movie.id!);
+                              },
+                            ),
+                          ],
                         ),
                       );
                     },
