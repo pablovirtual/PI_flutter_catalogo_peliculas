@@ -103,11 +103,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (result == null) {
                       setState(() => error = 'Error en credenciales o registro');
                     } else {
+                      // Si fue registro, mostrar mensaje de éxito
+                      if (!isLogin) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('¡Cuenta creada exitosamente! Bienvenido.'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        // Pequeña espera para que el usuario vea el mensaje
+                        await Future.delayed(const Duration(milliseconds: 1500));
+                      }
+
                       // Navegar al catálogo si es exitoso
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => const CatalogScreen()),
-                      );
+                      if (mounted) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => const CatalogScreen()),
+                        );
+                      }
                     }
                   }
                 },
